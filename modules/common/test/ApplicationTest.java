@@ -3,15 +3,18 @@ import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.contentType;
 
 import java.io.File;
+import java.net.ProxySelector;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Test;
 
+import com.btr.proxy.selector.pac.PacProxySelector;
+
+import play.Logger;
 import play.mvc.Content;
 import play.test.FakeApplication;
 import play.test.Helpers;
-
 
 /**
 *
@@ -52,4 +55,14 @@ public class ApplicationTest {
         assertThat(testData).isFile();
     }
 
+    @Test
+    public void unmanagedDependenciesCanBeFoundOnClassPath() {
+        FakeApplication app = new FakeApplication(relativeToBaseDir("."),
+                Helpers.class.getClassLoader(), new HashMap<String, String>(), new ArrayList<String>(), null);
+        
+        ProxySelector ps = new PacProxySelector(null);
+        
+        assertThat(ps instanceof ProxySelector);
+    }
+    
 }
